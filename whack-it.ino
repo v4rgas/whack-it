@@ -104,6 +104,24 @@ void setup()
   setupOTA();
   setupI2S();
   setupButtons();
+
+  // Create a separate task for handling OTA
+  xTaskCreate(
+      otaTask,    // Task function
+      "OTA Task", // Name of the task
+      10000,      // Stack size (bytes)
+      NULL,       // Task input parameter
+      1,          // Priority
+      NULL);      // Task handle
+}
+
+void otaTask(void *pvParameters)
+{
+  for (;;)
+  {
+    ArduinoOTA.handle(); // Handle OTA
+    vTaskDelay(100);     // Delay for a bit
+  }
 }
 
 void checkButtons()
@@ -185,9 +203,7 @@ int get_button_for_voice(SFX voice)
 
 void loop()
 {
-
-  ArduinoOTA.handle();
-  // checkButtons();
+  // checkButtons(); // Check button states in the main loop
 
   SFX voice = get_random_voice();
   play_sfx(voice);
