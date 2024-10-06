@@ -1,4 +1,5 @@
 #include <stdint.h>
+
 const unsigned int bopIt_voice_wav_data_len = 53320;
 const uint8_t bopIt_voice_wav_data[] = {
 

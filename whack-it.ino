@@ -88,7 +88,7 @@ void setupI2S()
   }
 
   Serial.println("Playing initial sound...");
-  i2s.playWAV(wav_data, wav_data_len); // Play initial sound
+  i2s.playWAV(bopIt_voice_wav_data, bopIt_voice_wav_data_len); // Play initial sound
 }
 
 void setupButtons()
