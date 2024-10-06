@@ -87,7 +87,7 @@ void setupI2S()
   }
 
   Serial.println("Playing initial sound...");
-  i2s.playWAV(bopIt_voice_wav_data, bopIt_voice_wav_data_len); // Play initial sound
+  i2s.playWAV((uint8_t *)bopIt_voice_wav_data, bopIt_voice_wav_data_len); // Play initial sound
 }
 
 void setupButtons()
@@ -111,17 +111,17 @@ void checkButtons()
   // Read the button states (LOW means pressed due to INPUT_PULLUP)
   if (digitalRead(bopItPin) == LOW)
   {
-    i2s.playWAV(bopIt_wav_data, bopIt_wav_data_len);
+    i2s.playWAV((uint8_t *)bopIt_wav_data, bopIt_wav_data_len);
   }
 
   if (digitalRead(pullItPin) == LOW)
   {
-    i2s.playWAV(pullIt_wav_data, pullIt_wav_data_len);
+    i2s.playWAV((uint8_t *)pullIt_wav_data, pullIt_wav_data_len);
   }
 
   if (digitalRead(twistItPin) == LOW)
   {
-    i2s.playWAV(twistIt_wav_data, twistIt_wav_data_len);
+    i2s.playWAV((uint8_t *)twistIt_wav_data, twistIt_wav_data_len);
   }
 }
 
