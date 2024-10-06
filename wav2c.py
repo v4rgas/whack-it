@@ -8,18 +8,14 @@ def read_wav_file(wav_file):
     except FileNotFoundError:
         print(f"Error: File '{wav_file}' not found.")
         raise
-    except Exception as e:
-        print(f"Error reading file: {e}")
-        raise
 
 def generate_c_array(byte_data):
     """Generates the C array string from byte data."""
     c_array = (
         "#include <stdint.h>\n"
+        f"const unsigned int wav_data_len = {len(byte_data)};\n"
         "const uint8_t wav_data[] = {\n"
     )
-
-    c_array += f"const unsigned int wav_data_len = {len(byte_data)};\n"
 
     for i, byte in enumerate(byte_data):
         if i % 12 == 0:
@@ -32,27 +28,22 @@ def generate_c_array(byte_data):
 
 def write_c_array_to_file(c_array, output_file):
     """Writes the generated C array to an output file."""
-    try:
-        with open(output_file, "w", encoding="utf-8") as f_out:
-            f_out.write(c_array)
-        print(f"Output written to {output_file}")
-    except Exception as e:
-        print(f"Error writing to file: {e}")
-        raise
+    with open(output_file, "w", encoding="utf-8") as f_out:
+        f_out.write(c_array)
+    print(f"Output written to {output_file}")
+
 
 def convert_wav_to_c_array(wav_file, output_file=None):
     """Main function to convert a WAV file to a C array and optionally output to a file."""
-    try:
-        byte_data = read_wav_file(wav_file)
-        c_array = generate_c_array(byte_data)
+    byte_data = read_wav_file(wav_file)
+    c_array = generate_c_array(byte_data)
 
-        if output_file:
-            write_c_array_to_file(c_array, output_file)
-        else:
-            print(c_array)
+    if output_file:
+        write_c_array_to_file(c_array, output_file)
+    else:
+        print(c_array)
 
-    except Exception as e:
-        print(f"Error processing file: {e}")
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
