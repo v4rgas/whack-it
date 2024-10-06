@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-const uint8_t bopIt_wav_data[];
-const unsigned int bopIt_wav_data_len;
+extern const uint8_t bopIt_wav_data[];
+extern const unsigned int bopIt_wav_data_len;
 
 #endif

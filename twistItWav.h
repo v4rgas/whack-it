@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-extern uint8_t twistIt_wav_data[];
-extern unsigned int twistIt_wav_data_len;
+extern const uint8_t twistIt_wav_data[];
+extern const unsigned int twistIt_wav_data_len;
 
 #endif
