@@ -6,135 +6,127 @@
 #include <bopItWav.h>
 #include <twistItWav.h>
 #include <pullItWav.h>
+#include <ESP_I2S.h>
 
+// WiFi credentials
 const char *ssid = "Juan Carlos";
 const char *password = "huerfadrino";
 
-#include <ESP_I2S.h>
-
-const int frequency = 440;    // frequency of square wave in Hz
-const int amplitude = 500;    // amplitude of square wave
-const int sampleRate = 8000;  // sample rate in Hz
+// Audio and I2S parameters
+const int frequency = 440;        // Frequency of square wave in Hz
+const int amplitude = 500;        // Amplitude of square wave
+const int sampleRate = 8000;      // Sample rate in Hz
+const int halfWavelength = (sampleRate / frequency);
 
 i2s_data_bit_width_t bps = I2S_DATA_BIT_WIDTH_16BIT;
 i2s_mode_t mode = I2S_MODE_STD;
 i2s_slot_mode_t slot = I2S_SLOT_MODE_STEREO;
 
-const int halfWavelength = (sampleRate / frequency);  // half wavelength of square wave
+int32_t sample = amplitude;       // Current sample value
 
-int32_t sample = amplitude;  // current sample value
-int count = 0;
-
+// Button pin definitions
 const int bopItPin = 2;
 const int pullItPin = 0;
 const int twistItPin = 5;
 
 I2SClass i2s;
 
-void setup() {
-  Serial.begin(9600);
-  Serial.println("Booting");
+void setupWiFi()
+{
+  Serial.println("Booting...");
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
+  
   while (WiFi.waitForConnectResult() != WL_CONNECTED) {
     Serial.println("Connection Failed! Rebooting...");
     delay(5000);
     ESP.restart();
   }
-
-   pinMode(bopItPin, INPUT_PULLUP);
-   pinMode(pullItPin, INPUT_PULLUP);
-   pinMode(twistItPin, INPUT_PULLUP);
-  // Port defaults to 3232
-  // ArduinoOTA.setPort(3232);
-
-  // Hostname defaults to esp3232-[MAC]
-  // ArduinoOTA.setHostname("myesp32");
-
-  // No authentication by default
-  // ArduinoOTA.setPassword("admin");
-
-  // Password can be set with it's md5 value as well
-  // MD5(admin) = 21232f297a57a5a743894a0e4a801fc3
-  // ArduinoOTA.setPasswordHash("21232f297a57a5a743894a0e4a801fc3");
-
-
-
-
-  ArduinoOTA
-    .onStart([]() {
-      String type;
-      if (ArduinoOTA.getCommand() == U_FLASH) {
-        type = "sketch";
-      } else {  // U_SPIFFS
-        type = "filesystem";
-      }
-
-      // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
-      Serial.println("Start updating " + type);
-    })
-    .onEnd([]() {
-      Serial.println("\nEnd");
-    })
-    .onProgress([](unsigned int progress, unsigned int total) {
-      Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
-    })
-    .onError([](ota_error_t error) {
-      Serial.printf("Error[%u]: ", error);
-      if (error == OTA_AUTH_ERROR) {
-        Serial.println("Auth Failed");
-      } else if (error == OTA_BEGIN_ERROR) {
-        Serial.println("Begin Failed");
-      } else if (error == OTA_CONNECT_ERROR) {
-        Serial.println("Connect Failed");
-      } else if (error == OTA_RECEIVE_ERROR) {
-        Serial.println("Receive Failed");
-      } else if (error == OTA_END_ERROR) {
-        Serial.println("End Failed");
-      }
-    });
-
-  ArduinoOTA.begin();
-
-  Serial.println("Ready");
+  
+  Serial.println("WiFi Connected!");
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
-
-  Serial.begin(115200);
-  Serial.println("I2S simple tone");
-  i2s.setPins(21,20,9);
-  Serial.println("Paso 1");
-  // start I2S at the sample rate with 16-bits per sample
-  if (!i2s.begin(mode, sampleRate, bps, slot)) {
-    Serial.println("Failed to initialize I2S!");
-    while (1);  // do nothing
-  }
-  Serial.println("Paso 2");
-  i2s.playWAV(wav_data, wav_data_len);
-  Serial.println("Paso 3");
 }
 
-void loop() {
-  ArduinoOTA.handle();
+void setupOTA()
+{
+  ArduinoOTA.onStart([]() {
+    String type = (ArduinoOTA.getCommand() == U_FLASH) ? "sketch" : "filesystem";
+    Serial.println("Start updating " + type);
+  });
+  
+  ArduinoOTA.onEnd([]() {
+    Serial.println("\nEnd");
+  });
+  
+  ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
+    Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+  });
+  
+  ArduinoOTA.onError([](ota_error_t error) {
+    Serial.printf("Error[%u]: ", error);
+    switch (error) {
+      case OTA_AUTH_ERROR: Serial.println("Auth Failed"); break;
+      case OTA_BEGIN_ERROR: Serial.println("Begin Failed"); break;
+      case OTA_CONNECT_ERROR: Serial.println("Connect Failed"); break;
+      case OTA_RECEIVE_ERROR: Serial.println("Receive Failed"); break;
+      case OTA_END_ERROR: Serial.println("End Failed"); break;
+    }
+  });
+  
+  ArduinoOTA.begin();
+  Serial.println("OTA Ready");
+}
 
-  // Read the button state (LOW means pressed due to the pull-up)
+void setupI2S()
+{
+  Serial.println("Initializing I2S...");
+  i2s.setPins(21, 20, 9);
+  
+  if (!i2s.begin(mode, sampleRate, bps, slot)) {
+    Serial.println("Failed to initialize I2S!");
+    while (true); // Stop if I2S setup fails
+  }
 
+  Serial.println("Playing initial sound...");
+  i2s.playWAV(wav_data, wav_data_len); // Play initial sound
+}
 
-  int bopItButton = digitalRead(bopItPin);
-  int pullItButton = digitalRead(pullItPin);
-  int twistItButton = digitalRead(twistItPin);
+void setupButtons()
+{
+  pinMode(bopItPin, INPUT_PULLUP);
+  pinMode(pullItPin, INPUT_PULLUP);
+  pinMode(twistItPin, INPUT_PULLUP);
+}
 
-  if (bopItButton == LOW)
+void setup()
+{
+  Serial.begin(115200);
+  setupWiFi();
+  setupOTA();
+  setupI2S();
+  setupButtons();
+}
+
+void checkButtons()
+{
+  // Read the button states (LOW means pressed due to INPUT_PULLUP)
+  if (digitalRead(bopItPin) == LOW) {
     i2s.playWAV(bopIt_wav_data, bopIt_wav_data_len);
-
-  if (pullItButton == LOW)
+  }
+  
+  if (digitalRead(pullItPin) == LOW) {
     i2s.playWAV(pullIt_wav_data, pullIt_wav_data_len);
-
-  if (twistItButton == LOW)
+  }
+  
+  if (digitalRead(twistItPin) == LOW) {
     i2s.playWAV(twistIt_wav_data, twistIt_wav_data_len);
+  }
+}
 
-  Serial.println(bopItButton);
-
-  delay(100); 
-
+void loop()
+{
+  ArduinoOTA.handle(); // Handle OTA updates
+  checkButtons();      // Check button states and play corresponding sounds
+  delay(100);          // Small delay to debounce the buttons
 }
