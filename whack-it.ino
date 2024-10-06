@@ -201,7 +201,7 @@ int get_button_for_voice(SFX voice)
   }
 }
 
-sfx get_sfx_for_button(int buttonPin)
+SFX get_sfx_for_button(int buttonPin)
 {
   switch (buttonPin)
   {
