@@ -201,6 +201,19 @@ int get_button_for_voice(SFX voice)
   }
 }
 
+sfx get_sfx_for_button(int buttonPin)
+{
+  switch (buttonPin)
+  {
+  case bopItPin:
+    return BOP_IT;
+  case pullItPin:
+    return PULL_IT;
+  case twistItPin:
+    return TWIST_IT;
+  }
+}
+
 void loop()
 {
   // checkButtons(); // Check button states in the main loop
@@ -208,6 +221,7 @@ void loop()
   SFX voice = get_random_voice();
   play_sfx(voice);
 
-  wait_until_button_for_voice_is_pressed(get_button_for_voice(voice));
-  play_sfx(BOP_IT);
+  int button = get_button_for_voice(voice);
+  wait_until_button_for_voice_is_pressed(button);
+  play_sfx(get_sfx_for_button(button));
 }
