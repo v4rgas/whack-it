@@ -171,6 +171,10 @@ void play_sfx(SFX sfx)
   case TWIST_IT_VOICE:
     i2s.playWAV((uint8_t *)twistIt_voice_wav_data, twistIt_voice_wav_data_len);
     break;
+
+  case DRUM_LOOP:
+    i2s.playWAV((uint8_t *)drum_loop_data, drum_loop_data_len);
+    break;
   }
 }
 
@@ -218,6 +222,7 @@ void loop()
 {
   // checkButtons(); // Check button states in the main loop
 
+  play_sfx(DRUM_LOOP);
   SFX voice = get_random_voice();
   play_sfx(voice);
 

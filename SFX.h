@@ -7,6 +7,7 @@
 #include "twistItWav.h"
 #include "pullItVoiceWav.h"
 #include "twistItVoiceWav.h"
+#include "drumLoop.h"
 
 enum SFX
 {
@@ -15,7 +16,8 @@ enum SFX
     TWIST_IT,
     BOP_IT_VOICE,
     PULL_IT_VOICE,
-    TWIST_IT_VOICE
+    TWIST_IT_VOICE,
+    DRUM_LOOP
 };
 
 #endif
