@@ -2,7 +2,6 @@
 #include <ESPmDNS.h>
 #include <NetworkUdp.h>
 #include <ArduinoOTA.h>
-#include <wav.h>
 #include <ESP_I2S.h>
 #include <SFX.h>
 
