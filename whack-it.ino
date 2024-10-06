@@ -125,9 +125,56 @@ void checkButtons()
   }
 }
 
+SFX get_random_voice()
+{
+  SFX voice = (SFX)(random(3) + BOP_IT_VOICE);
+  return voice;
+}
+
+void play_sfx(SFX sfx)
+{
+  switch (sfx)
+  {
+  case BOP_IT:
+    i2s.playWAV((uint8_t *)bopIt_wav_data, bopIt_wav_data_len);
+    break;
+  case PULL_IT:
+    i2s.playWAV((uint8_t *)pullIt_wav_data, pullIt_wav_data_len);
+    break;
+  case TWIST_IT:
+    i2s.playWAV((uint8_t *)twistIt_wav_data, twistIt_wav_data_len);
+    break;
+  case BOP_IT_VOICE:
+    i2s.playWAV((uint8_t *)bopIt_voice_wav_data, bopIt_voice_wav_data_len);
+    break;
+  case PULL_IT_VOICE:
+    i2s.playWAV((uint8_t *)pullIt_voice_wav_data, pullIt_voice_wav_data_len);
+    break;
+  case TWIST_IT_VOICE:
+    i2s.playWAV((uint8_t *)twistIt_voice_wav_data, twistIt_voice_wav_data_len);
+    break;
+  }
+}
+
+void wait_until_button_for_voice_is_pressed(int buttonPin)
+{
+  while (digitalRead(buttonPin) == HIGH)
+  {
+    delay(10);
+  }
+}
+
 void loop()
 {
-  ArduinoOTA.handle(); // Handle OTA updates
-  checkButtons();      // Check button states and play corresponding sounds
-  delay(10);           // Small delay to debounce the buttons
+
+  ArduinoOTA.handle();
+  // checkButtons();
+
+  SFX voice = get_random_voice();
+  play_sfx(voice);
+
+  wait_until_button_for_voice_is_pressed(bopItPin);
+  play_sfx(BOP_IT);
+
+  delay(10);
 }

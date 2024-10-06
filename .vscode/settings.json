@@ -2,6 +2,7 @@
     "files.associations": {
         "stdint.h": "c",
         "ostream": "cpp",
-        "cstdint": "cpp"
+        "cstdint": "cpp",
+        "format": "cpp"
     }
 }

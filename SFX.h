@@ -5,5 +5,17 @@
 #include "bopItVoiceWav.h"
 #include "pullItWav.h"
 #include "twistItWav.h"
+#include "pullItVoiceWav.h"
+#include "twistItVoiceWav.h"
+
+enum SFX
+{
+    BOP_IT,
+    PULL_IT,
+    TWIST_IT,
+    BOP_IT_VOICE,
+    PULL_IT_VOICE,
+    TWIST_IT_VOICE
+};
 
 #endif
