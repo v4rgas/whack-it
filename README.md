@@ -1,4 +1,4 @@
-# WhackIt!
+# Whack It!
 
 A modified Bop It Micro, equipped with an ESP32 microcontroller and an I2S amplifier, allowing for custom code and audio output for interactive applications.
 
