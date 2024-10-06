@@ -160,7 +160,26 @@ void wait_until_button_for_voice_is_pressed(int buttonPin)
 {
   while (digitalRead(buttonPin) == HIGH)
   {
-    delay(10);
+    delay(1);
+  }
+}
+
+int get_button_for_voice(SFX voice)
+{
+  switch (voice)
+  {
+  case BOP_IT:
+    return bopItPin;
+  case PULL_IT:
+    return pullItPin;
+  case TWIST_IT:
+    return twistItPin;
+  case BOP_IT_VOICE:
+    return bopItPin;
+  case PULL_IT_VOICE:
+    return pullItPin;
+  case TWIST_IT_VOICE:
+    return twistItPin;
   }
 }
 
@@ -173,8 +192,6 @@ void loop()
   SFX voice = get_random_voice();
   play_sfx(voice);
 
-  wait_until_button_for_voice_is_pressed(bopItPin);
+  wait_until_button_for_voice_is_pressed(get_button_for_voice(voice));
   play_sfx(BOP_IT);
-
-  delay(10);
 }
