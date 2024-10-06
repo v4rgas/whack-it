@@ -6,7 +6,7 @@ A modified Bop It Micro, equipped with an ESP32 microcontroller and an I2S ampli
 - OTA updates
 - wav to c converter
 
-<img src="./docs/bopit.jpg" width="400">
+<img src="https://github.com/v4rgas/whack-it/blob/main/docs/bopit.jpg?raw=true" width="400">
 
 ## Hardware required
 
