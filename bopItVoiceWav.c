@@ -1,6 +1,6 @@
 #include <stdint.h>
-const unsigned int bop_it_voice_wav_data_len = 53320;
-const uint8_t bop_it_voice_wav_data[] = {
+const unsigned int bopIt_voice_wav_data_len = 53320;
+const uint8_t bopIt_voice_wav_data[] = {
 
     0x52,
     0x49,

@@ -130,5 +130,5 @@ void loop()
 {
   ArduinoOTA.handle(); // Handle OTA updates
   checkButtons();      // Check button states and play corresponding sounds
-  delay(100);          // Small delay to debounce the buttons
+  delay(10);           // Small delay to debounce the buttons
 }
