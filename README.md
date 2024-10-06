@@ -2,6 +2,10 @@
 
 A modified Bop It Micro, equipped with an ESP32 microcontroller and an I2S amplifier, allowing for custom code and audio output for interactive applications.
 
+## Features
+- OTA updates
+- wav to c converter
+
 <img src="./docs/bopit.jpg" width="400">
 
 ## Hardware required
